@@ -12,8 +12,9 @@ variables:
   dotnetSdkVersion: '3.1.100'
 
 steps:
-- script: echo Abhiraj CS welcome
-    condition: always()
+- script: echo 'Abhiraj CS welcome'
+  condition: always()
+  
 - task: UseDotNet@2
   displayName: 'Use .NET Core SDK $(dotnetSdkVersion)'
   inputs:
