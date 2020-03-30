@@ -43,12 +43,22 @@ steps:
     command: 'restore'
     projects: '**/*.csproj'
 
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'buidtestapp'
+    organization: 'abhiraj1289'
+    scannerMode: 'MSBuild'
+    projectKey: 'Buildtestapp'
+    projectName: 'Buildtestapp'
+
 - task: DotNetCoreCLI@2
   displayName: 'Build the project - $(buildConfiguration)'
   inputs:
     command: 'build'
     arguments: '--no-restore --configuration $(buildConfiguration)'
     projects: '**/*.csproj'
+
+
 
 - task: DotNetCoreCLI@2
   displayName: 'Install ReportGenerator'
@@ -64,6 +74,13 @@ steps:
     arguments: '--no-build --configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat="cobertura%2copencover" /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
     publishTestResults: true
     projects: '**/*.Tests.csproj'
+
+- task: SonarCloudAnalyze@1
+
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
+
 
 # - script: |
 #     reportgenerator -reports:$(Build.SourcesDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines
